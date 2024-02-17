@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <portaudio.h>
+#include <sndfile.h>;
 
 static void checkErr(PaError err){
     if (err != paNoError){

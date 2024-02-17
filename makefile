@@ -1,15 +1,25 @@
 EXEC = tonetrace
 
-CLIB = -I./lib/portaudio/include ./lib/portaudio/lib/.libs/libportaudio.a -lrt -lasound -ljack -pthread
+CLIB = -I./lib/libsndfile-1.2.2/include -pthread
 
 $(EXEC): main.cpp
 	g++ -o $@ $^ $(CLIB)
 
 install-deps:
 	mkdir -p lib
+	curl -L https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz | tar -xvf - -C lib --use-compress-program xz
+	curl -L https://fftw.org/fftw-3.3.10.tar.gz | tar -xzvf - -C lib
+	
+	# Build libsndfile
+	cd lib/libsndfile-1.2.2 && \
+	cmake . && \
+	make
+	
+	# Build FFTW
+	cd lib/fftw-3.3.10 && \
+	./configure && \
+	make
 
-	curl https://files.portaudio.com/archives/pa_stable_v190700_20210406.tgz | tar -zx -C lib
-	cd lib/portaudio && ./configure && $(MAKE) -j
 .PHONY: install-deps
 
 uninstall-deps:
