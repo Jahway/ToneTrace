@@ -34,7 +34,7 @@ dep_inst:
 
 # Build FFTW
 	cd lib/fftw-3.3.10 && \
-	./configure --prefix=$(INSTALL_DIR)/fftw-install --enable-shared=yes --with-gcc --enable-type-prefix && \
+	./configure --prefix=$(INSTALL_DIR)/fftw-install --enable-shared=yes --enable-type-prefix && \
 	make && \
 	make install
 
