@@ -18,6 +18,7 @@
 #define SPECTRO_FREQ_START 20
 #define SPECTRO_FREQ_END 20000
 #define BUFFER_LEN 1024
+#define SAMPLE_RATE 44100
 #define MAX_CHANNELS 2
 #define FFT_SIZE 512
 #define SPECTRO_FREQ_START 20
@@ -34,7 +35,7 @@ typedef struct
 	SF_INFO sf_info;	  
 }audio_data;
 
-//Read audio file using libsndfile, extract audio data into input_buf and initialize audio_data struct
+//Read audio file using libsndfile, extract audio data into input_buf and initialize audio_data struct.
 void read_audio(const char *in_file, audio_data *spectro_data, double **input_buf) {
 	memset(&(spectro_data->sf_info), 0, sizeof(SF_INFO));
 
@@ -63,8 +64,7 @@ void read_audio(const char *in_file, audio_data *spectro_data, double **input_bu
     sf_close(spectro_data->snd_file);
 }
 
-
-
+//Based on the audio data stored in input_buf, generate time domain graph of the audio file.
 void time_domain(const audio_data* spectro_data, double *input_buf) {
     FILE *file = fopen("src/time_domain.jgr", "w");
     if (!file) {
@@ -113,6 +113,7 @@ void apply_hanning_window(double *data, int size) {
     }
 }
 
+// Based on the audio data stored in input_buf, generate time frequency domain graph for a certain timestamp of the audio file.
 void frequency_domain(audio_data* spectro_data, double *input_buf) {
     int start_index = spectro_data->target_second * spectro_data->sf_info.samplerate;
     double *windowed_data = (double*) malloc(sizeof(double) * FFT_SIZE);
@@ -139,7 +140,7 @@ void frequency_domain(audio_data* spectro_data, double *input_buf) {
     fprintf(file, "newline color 0 0 .75\n");
 
     for (int i = 0; i < FFT_SIZE/2; i++) {
-        double freq = i * (double)spectro_data->sf_info.samplerate / FFT_SIZE;
+        double freq = i * (double)spectro_data->sf_info.samplerate / FFT_SIZE * (SAMPLE_RATE/spectro_data->sf_info.samplerate);
         if (freq >= SPECTRO_FREQ_START && freq <= SPECTRO_FREQ_END) {
             double magnitude = sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1]);
             double magnitude_dB = 20 * log10(magnitude / FFT_SIZE);
@@ -157,6 +158,7 @@ void frequency_domain(audio_data* spectro_data, double *input_buf) {
     fftw_free(out);
     free(windowed_data);
 }
+
 
 
 int main(int argc, char **argv) {

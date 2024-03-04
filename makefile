@@ -1,6 +1,7 @@
 EXEC = tonetrace
 SRCDIR = src
 BINDIR = bin
+OUTDIR = output
 INSTALL_DIR = $(abspath .)/lib
 
 INCS += -I$(INSTALL_DIR)/fftw-install/include -I$(INSTALL_DIR)/libsndfile-install/include
@@ -20,6 +21,7 @@ inst_dep:
 	curl -L https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz | xzcat | tar -xvf - -C lib
 	curl -L https://fftw.org/fftw-3.3.10.tar.gz | tar -xzvf - -C lib
 
+# Build jgraph
 	cd lib/jgraph/jgraph && \
 	make
 
@@ -47,10 +49,11 @@ uninst_dep:
 pull_audio:
 	mkdir -p audio
 	wget -r -nd -A.wav -P audio https://www2.cs.uic.edu/~i101/SoundFiles/
-
+	rm -f audio/CantinaBand3.wav audio/taunt.wav audio/StarWars3.wav
 .PHONY: pull_audio
 
 clean:
 	rm -rf $(BINDIR)
-
+	rm -rf $(OUTDIR)
+	rm -r $(SRCDIR)/*.jgr
 .PHONY: clean
