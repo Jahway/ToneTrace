@@ -52,5 +52,5 @@ jgraph -P file.jgr | ps2pdf - > output.pdf
 
 ## Acknowledgements
 
-- Dr James S. Plank at University of Tennessee for providing the opportunity to develop this project.
+- Dr. James S. Plank at University of Tennessee for providing the opportunity to develop this project.
 - [libsndfile](http://www.mega-nerd.com/libsndfile/) and [FFTW](http://www.fftw.org/) libraries for enabling audio processing and Fourier transform capabilities.
