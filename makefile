@@ -14,7 +14,7 @@ $(BINDIR)/$(EXEC): $(SRCDIR)/main.cpp
 	mkdir -p $(BINDIR)
 	g++ $(CXXFLAGS) -o $@ $^ $(INCS) $(LDFLAGS) $(LIBS)
 
-dep_inst: 
+inst_dep: 
 	mkdir -p $(INSTALL_DIR)/libsndfile-install $(INSTALL_DIR)/fftw-install
 	curl -L http://web.eecs.utk.edu/~jplank/plank/jgraph/2024-02-15-Jgraph.tar | tar -xvf - -C lib
 	curl -L https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz | xzcat | tar -xvf - -C lib
@@ -39,10 +39,10 @@ dep_inst:
 
 .PHONY: inst_dep
 
-uninstall-deps:
+uninst_dep:
 	rm -rf $(INSTALL_DIR)
 
-.PHONY: uninstall-deps
+.PHONY: uninst_dep
 
 pull_audio:
 	mkdir -p audio
@@ -51,7 +51,6 @@ pull_audio:
 .PHONY: pull_audio
 
 clean:
-	rm -f $(BINDIR)/$(EXEC)
-	rm -f $(BINDIR)/*.wav
+	rm -rf $(BINDIR)
 
 .PHONY: clean
